@@ -6,7 +6,7 @@ export class Apartamento {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => Veiculo, (veiculo) => veiculo.apartamentoId)
+  @OneToMany(() => Veiculo, (veiculo) => veiculo.idApartamento)
   veiculos: Veiculo[];
 
   @Column({ type: 'int' })

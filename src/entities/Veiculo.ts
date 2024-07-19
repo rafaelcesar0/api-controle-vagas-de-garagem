@@ -15,7 +15,7 @@ export class Veiculo {
 
   @ManyToOne(() => Apartamento, (apartamento) => apartamento.veiculos)
   @JoinColumn({ name: 'id_apartamento' })
-  apartamentoId: Apartamento;
+  idApartamento: Apartamento;
 
   @Column({ type: 'varchar', length: 30 })
   marca: string;
