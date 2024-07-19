@@ -1,26 +1,26 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Veiculo } from "./Veiculos";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Veiculo } from './Veiculo';
 
 @Entity('apartamentos')
 export class Apartamento {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
-  @OneToMany(() => Veiculo, veiculo => veiculo.apartamento)
-  veiculos:Veiculo[]
+  @OneToMany(() => Veiculo, (veiculo) => veiculo.apartamentoId)
+  veiculos: Veiculo[];
 
-  @Column({type: 'int'})
-  bloco: number
+  @Column({ type: 'int' })
+  bloco: number;
 
-  @Column({type: 'int'})
-  apartamento: number
+  @Column({ type: 'int' })
+  apartamento: number;
 
-  @Column({ type:'varchar', length:150 })
-  morador: string
+  @Column({ type: 'varchar', length: 150 })
+  morador: string;
 
-  @Column({ type:'varchar', length:13 })
-  telefone: string
+  @Column({ type: 'varchar', length: 13 })
+  telefone: string;
 
-  @Column({ type:'varchar', length:100, nullable: true })
-  email: string
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  email: string;
 }
