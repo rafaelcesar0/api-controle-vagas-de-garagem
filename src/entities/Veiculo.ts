@@ -13,10 +13,6 @@ export class Veiculo {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Apartamento, (apartamento) => apartamento.veiculos)
-  @JoinColumn({ name: 'id_apartamento' })
-  idApartamento: Apartamento;
-
   @Column({ type: 'varchar', length: 30 })
   marca: string;
 
@@ -28,4 +24,8 @@ export class Veiculo {
 
   @Column({ type: 'varchar', length: 7 })
   placa: string;
+
+  @ManyToOne(() => Apartamento, (apartamento) => apartamento.veiculos)
+  @JoinColumn({ name: 'id_apartamento' })
+  apartamento: Apartamento;
 }

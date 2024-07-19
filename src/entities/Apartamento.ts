@@ -6,9 +6,6 @@ export class Apartamento {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => Veiculo, (veiculo) => veiculo.idApartamento)
-  veiculos: Veiculo[];
-
   @Column({ type: 'int' })
   bloco: number;
 
@@ -23,4 +20,7 @@ export class Apartamento {
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   email: string;
+
+  @OneToMany(() => Veiculo, (veiculo) => veiculo.apartamento)
+  veiculos: Veiculo[];
 }
