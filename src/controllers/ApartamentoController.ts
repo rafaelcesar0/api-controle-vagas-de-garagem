@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { apartamentoRepository } from '../repositories/apartamentoRepository';
-import { veiculoRepository } from '../repositories/veiculoRepository';
 
 export class ApartamentoController {
   async create(req: Request, res: Response) {
@@ -21,23 +20,10 @@ export class ApartamentoController {
         telefone,
         email,
       });
-      
+
       await apartamentoRepository.save(newApartamento);
-      
+
       return res.status(201).json(newApartamento);
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: 'Internal Server Error' });
-    }
-  }
-
-  async list(req: Request, res: Response) {
-    try {
-      const apartamentos = await apartamentoRepository.find({
-        relations: { veiculos: true },
-      });
-
-      return res.json(apartamentos);
     } catch (error) {
       console.log(error);
       return res.status(500).json({ message: 'Internal Server Error' });
@@ -48,10 +34,17 @@ export class ApartamentoController {
     const { idApartamento } = req.params;
 
     try {
-      const apartamento = await apartamentoRepository.findOne({
-        where: { id: parseInt(idApartamento) },
-        relations: { veiculos: true },
-      });
+      let apartamento;
+      if (idApartamento) {
+        apartamento = await apartamentoRepository.findOne({
+          where: { id: parseInt(idApartamento) },
+          relations: { veiculos: true },
+        });
+      } else {
+        apartamento = await apartamentoRepository.find({
+          relations: { veiculos: true },
+        });  
+      }
 
       if (!apartamento) {
         return res.status(404).json({ mensage: 'Apartamento não encontrado' });
@@ -65,8 +58,8 @@ export class ApartamentoController {
   }
 
   async update(req: Request, res: Response) {
-    const { idApartamento } = req.params;
     const { apartamento, bloco, morador, telefone, email } = req.body;
+    const { idApartamento } = req.params;
 
     try {
       const existingApartamento = await apartamentoRepository.findOneBy({
@@ -97,7 +90,9 @@ export class ApartamentoController {
     const { idApartamento } = req.params;
 
     try {
-      const result = await apartamentoRepository.delete(parseInt(idApartamento));
+      const result = await apartamentoRepository.delete(
+        parseInt(idApartamento)
+      );
 
       if (result.affected === 0) {
         return res.status(404).json({ mensage: 'Apartamento não encontrado' });
@@ -109,70 +104,4 @@ export class ApartamentoController {
       return res.status(500).json({ message: 'Internal Server Error' });
     }
   }
-
-
-  async createVeiculo(req: Request, res: Response) {
-    const { marca, modelo, cor, placa } = req.body;
-    const { idApartamento } = req.params;
-
-    try {
-      const apartamento = await apartamentoRepository.findOneBy({
-        id: Number(idApartamento),
-      });
-
-      if (!apartamento) {
-        return res.status(404).json({ message: 'Apartamento não encontrado' });
-      }
-      if (!marca && !modelo && !cor && !placa) {
-        return res.status(400).json({
-          message:
-            'Os campos MARCA, MODELO, COR e PLACA são obrigatórios',
-        });
-      }
-
-      const newVeiculo = veiculoRepository.create({
-        marca,
-        modelo,
-        cor,
-        placa,
-        apartamento,
-      });
-
-      await veiculoRepository.save(newVeiculo);
-
-      return res.status(201).json(newVeiculo);
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: 'Internal Server Error' });
-    }
-  }
-
-  // async readVeiculo(req: Request, res: Response) {
-  //   const { idApartamento } = req.params;
-
-  //   try {
-  //     const apartamento = await apartamentoRepository.findOneBy({
-  //       id: Number(idApartamento),
-  //     });
-
-  //     if (!apartamento) {
-  //       return res.status(404).json({ message: 'Apartamento não encontrado' });
-  //     }
-
-  //     const newVeiculo = veiculoRepository.create({
-  //       marca,
-  //       modelo,
-  //       cor,
-  //       placa,
-  //       apartamento,
-  //     });
-
-  //     await veiculoRepository.save(newVeiculo);
-
-  //     return res.status(201).json(newVeiculo);
-  //   } catch (error) {
-  //     console.log(error);
-  //     return res.status(500).json({ message: 'Internal Server Error' });
-  //   }
-  // }
 }
