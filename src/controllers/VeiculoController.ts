@@ -41,17 +41,13 @@ export class VeiculoController {
   }
 
   async read(req: Request, res: Response) {
-    const { idApartamento, idVeiculo } = req.params;
+    const { idVeiculo } = req.params;
 
     try {
       let veiculo;
       if (idVeiculo) {
         veiculo = await veiculoRepository.findOne({
           where: { id: parseInt(idVeiculo) },
-        });
-      } else if (idApartamento) {
-        veiculo = await veiculoRepository.findBy({
-          apartamento: { id: parseInt(idApartamento) },
         });
       } else {
         veiculo = await veiculoRepository.find();
